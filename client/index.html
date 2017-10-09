@@ -2,133 +2,22 @@
 <html>
 <head>
 	<title>You Insured!</title>
+	<base href="/">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="/style.css">
 </head>
-<body>
+<body ng-app="app">
 	<div class="container">
-		<h1>Choose a Service</h1>
-		<div class="row">
-			<div class="col-sm-6">
-				<div class="card" style="width: 100%;">
-					<img class="card-img-top" src="http://via.placeholder.com/350x250" alt="Card image cap">
-					<div class="card-body">
-						<h4 class="card-title">Buy Policy</h4>
-						<p class="card-text">Peace of mind comes with a piece of mine.</p>
-						<a href="#" class="btn btn-primary" onclick="BuyPolicy.showBuyPolicyModal()">Buy now!</a>
-					</div>
-				</div>
-			</div>
-			<div class="col-sm-6">
-				<div class="card" style="width: 100%;">
-					<img class="card-img-top" src="http://via.placeholder.com/350x250" alt="Card image cap">
-					<div class="card-body">
-						<h4 class="card-title">Notify Loss</h4>
-						<p class="card-text">Come insured - go assured.</p>
-						<a href="#" class="btn btn-success" onclick="DeclareClaim.showClaimModal()">Claim now!</a>
-					</div>
-				</div>
-			</div>
-		</div>
-
-    <h2>For Our Partners</h2>
-    <div class="row">
-      <div class="col-sm-4">
-        <div class="card" style="width: 100%;">
-          <img class="card-img-top" src="http://via.placeholder.com/350x250" alt="Card image cap">
-          <div class="card-body">
-            <h4 class="card-title">Confirm Loss</h4>
-            <p class="card-text">Our Business - Your Business</p>
-            <a href="#" class="btn btn-danger">Verify loss!</a>
-          </div>
-        </div>
-      </div>
-    </div>
+		<ng-view></ng-view>
 	</div>
-
-	<!-- Buy Policy Modal -->
-	<div class="modal fade" id="buyPolicyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">Buy Policy</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <div class="modal-body">
-	        <form>
-            <div class="form-group">
-              <label class="control-label" for="policyType">Policy Type</label>
-              <select class="form-control" name="policyType" id="policyType">
-                <option value="">Select one</option>
-                <option value="travel-ta1">TA1 - GTom Travel</option>
-                <option value="travel-ta2">TA2 - GTom Travel</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="control-label" for="insuredAmount">Insured amount</label>
-              <input class="form-control" name="insuredAmount" id="insuredAmount">
-            </div>
-
-						<div class="form-group">
-							<label class="control-label" for="ethereumAddress">Your wallet address</label>
-							<input class="form-control" name="ethereumAddress" id="ethereumAddress">
-						</div>
-	        </form>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary">Buy now!</button>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-  <!-- END OF Buy Policy Modal -->
-
-  <!-- Notify Loss Modal -->
-  <div class="modal fade" id="notifyLossModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Declare Claim</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="form-group">
-              <label class="control-label" for="policyType">Policy NO</label>
-              <select class="form-control" name="policyNo" id="policyNo">
-                <option value="">Select one</option>
-                <option value="ta10001">TA1 - GTom Travel</option>
-                <option value="ga0001">SmartDrive</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label class="control-label" for="dateOfLoss">Date of Loss</label>
-              <input class="form-control" type="date" name="dateOfLoss" id="dateOfLoss">
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Claim now!</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- END OF Buy Policy Modal -->
 
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/superagent/3.6.3/superagent.js"></script>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js" charset="utf-8"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular-route.min.js" charset="utf-8"></script>
 	<script type="text/javascript" src="/lib/web3.min.js"></script>
 	<script type="text/javascript" src="/insurance-client.js"></script>
 </body>

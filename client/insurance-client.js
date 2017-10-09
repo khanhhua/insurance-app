@@ -1,33 +1,29 @@
-(function Services(root) {
-	var exports_ = {};
+var mod = angular.module('app', ['ngRoute']);
 
-	var API_ENDPOINT = 'http://localhost:8080/api';
+mod.controller('BuyPolicyCtrl', BuyPolicyCtrl);
+function BuyPolicyCtrl($scope) {
+	debugger
+}
 
-	exports_.buyPolicy = function (policyObject) {
-		return request.post(API_ENDPOINT + '/policies')
-	}
+mod.controller('ClaimCtrl', ClaimCtrl);
+function ClaimCtrl($scope) {
+	debugger
+}
 
-	root.Services = exports_;
-})(window);
+mod.config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
+	$locationProvider.html5Mode = false;
 
-(function BuyPolicy(root) {
-	var exports_ = {};
-
-	exports_.showBuyPolicyModal = function () {
-		$('#buyPolicyModal').modal('show');
-	}
-
-	// export
-	root.BuyPolicy = exports_;
-})(window);
-
-(function DeclareClaim(root) {
-	var exports_ = {};
-
-	exports_.showClaimModal = function () {
-		$('#notifyLossModal').modal('show');
-	}
-
-	// export
-	root.DeclareClaim = exports_;
-})(window);
+	$routeProvider.caseInsensitiveMatch = true;
+	$routeProvider
+	.when('/buy', {
+		// controller: 'BuyPolicyCtrl',
+		templateUrl: '/templates/buy.html'
+	})
+	.when('/claim', {
+		// controller: 'ClaimCtrl',
+		templateUrl: '/templates/claim.html'
+	})
+	.when('/', {
+		templateUrl: '/templates/home.html'
+	});
+}]);
