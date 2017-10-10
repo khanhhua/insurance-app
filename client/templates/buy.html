@@ -4,26 +4,31 @@
   <div class="col-sm-12">
     <form>
       <div class="form-group">
-        <label class="control-label" for="policyType">Policy Type</label>
-        <select class="form-control" name="policyType" id="policyType">
-          <option value="">Select one</option>
-          <option value="travel-ta1">TA1 - GTom Travel</option>
-          <option value="travel-ta2">TA2 - GTom Travel</option>
-        </select>
+        <label class="control-label" for="policyNo">Policy No</label>
+        <input class="form-control" name="policyNo" id="policyNo"
+               ng-model="policyNo">
       </div>
 
       <div class="form-group">
         <label class="control-label" for="insuredAmount">Insured amount</label>
-        <input class="form-control" name="insuredAmount" id="insuredAmount">
+        <input class="form-control" name="insuredAmount" id="insuredAmount"
+               ng-model="insuredAmount">
       </div>
 
-      <div class="form-group">
+      <!-- <div class="form-group">
         <label class="control-label" for="ethereumAddress">Your wallet address</label>
-        <input class="form-control" name="ethereumAddress" id="ethereumAddress">
-      </div>
+        <input class="form-control" name="ethereumAddress" id="ethereumAddress"
+              ng-model="ethereumAddress">
+      </div> -->
 
       <div class="form-group">
-        <button type="button" class="btn btn-primary center-block">Buy</button>
+        <button type="button" class="btn btn-primary center-block" ng-click="onBuyClick()">
+          Buy
+        </button>
+      </div>
+
+      <div class="alert alert-info" ng-if="policy">
+        <p>You have requested for a contract successfully! Address: `{{policy.address}}`</p>
       </div>
     </form>
   </div>
