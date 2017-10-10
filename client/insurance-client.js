@@ -44,6 +44,20 @@ mod.service('insuranceService', ['$q', 'web3', function ($q, web3) {
 		 return deferred.promise;
 	}
 
+	function getPolicy (policyAddress) {
+		var deferred = $q.defer();
+
+		contract.at(policyAddress, function (e, result) {
+			if (e) {
+				return deferred.reject(e);
+			} else if (result) {
+				return deferred.resolve(result);
+			}
+		});
+
+		return deferred.promise;
+	}
+
 	function notifyLoss (policyAddress, description, lossValue) {
 		var instance = contract.at(policyAddress);
 		var deferred = $q.defer();
@@ -63,6 +77,7 @@ mod.service('insuranceService', ['$q', 'web3', function ($q, web3) {
 
 	return {
 		buyPolicy: buyPolicy,
+		getPolicy: getPolicy,
 		notifyLoss: notifyLoss
 	};
 }]);
@@ -75,15 +90,41 @@ function BuyPolicyCtrl($scope, insuranceService) {
 	$scope.policy = null;
 
 	$scope.onBuyClick = function () {
-		insuranceService.buyPolicy($scope.policyNo, $scope.insuredAmount).then(function (contract) {
-			$scope.policy = contract;
+		insuranceService.buyPolicy($scope.policyNo, $scope.insuredAmount).then(function (policy) {
+			$scope.policy = policy;
 		})
-	}
+	};
 }
 
-mod.controller('ClaimCtrl', ['$scope', 'web3', ClaimCtrl]);
-function ClaimCtrl($scope, web3) {
-	debugger
+mod.controller('ClaimCtrl', ['$scope', 'insuranceService', ClaimCtrl]);
+function ClaimCtrl($scope, insuranceService) {
+	$scope.policyAddress = null;
+	$scope.policy = null;
+	$scope.insuredAmount = null;
+
+	$scope.description = null;
+	$scope.lossValue = null;
+
+	$scope.onClaimClick = function () {
+		insuranceService.notifyLoss($scope.policyAddress, $scope.description, $scope.lossValue);
+	}
+
+
+	$scope.$watch('policyAddress', function (policyAddress) {
+		if (!policyAddress) {
+			return;
+		}
+
+		insuranceService.getPolicy(policyAddress).then(function (policy) {
+			$scope.policy = policy;
+
+			policy.getInsuredAmount({}, function (e, insuredAmount) {
+				$scope.$apply(function () {
+					$scope.insuredAmount = insuredAmount.c[0];
+				});
+			});
+		});
+	})
 }
 
 mod.config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
@@ -96,7 +137,7 @@ mod.config(['$locationProvider', '$routeProvider', function ($locationProvider, 
 		templateUrl: '/templates/buy.html'
 	})
 	.when('/claim', {
-		// controller: 'ClaimCtrl',
+		controller: 'ClaimCtrl',
 		templateUrl: '/templates/claim.html'
 	})
 	.when('/', {
