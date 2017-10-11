@@ -92,11 +92,38 @@ mod.service('insuranceService', ['$q', 'web3', function ($q, web3) {
 		return deferred.promise;
 	}
 
+	function payForClaim (policyAddress, payoutValue) {
+		var instance = contract.at(policyAddress);
+		var deferred = $q.defer();
+
+		instance.getPublicData(function (e, publicData) {
+			if (e) {
+				return deferred.reject(e);
+			}
+
+			var claimNo = publicData[2].toString();
+			var lossValue = publicData[4].toString();
+
+			instance.payForClaim(claimNo, {
+				from: web3.eth.accounts[1],
+				gas: '4700000',
+				value: payoutValue
+			}, function (e, result) {
+				if (e) {
+					return deferred.reject(e);
+				}
+				deferred.resolve(result);
+			});
+		});
+		return deferred.promise;
+	}
+
 	return {
 		buyPolicy: buyPolicy,
 		getPolicy: getPolicy,
 		notifyLoss: notifyLoss,
-		confirmLoss: confirmLoss
+		confirmLoss: confirmLoss,
+		payForClaim: payForClaim
 	};
 }]);
 
@@ -197,6 +224,59 @@ function ConfirmCtrl($scope, insuranceService) {
 	})
 }
 
+mod.controller('PayoutCtrl', ['$scope', 'insuranceService', PayoutCtrl]);
+function PayoutCtrl($scope, insuranceService) {
+	$scope.policyAddress = null;
+	$scope.policy = null;
+	$scope.lossValue = null;
+	$scope.payoutValue = null;
+
+	$scope.claim = {
+		claimNo: null,
+		description: null,
+		lossValue: null
+	};
+
+	$scope.confirmTransaction = null;
+	$scope.confirmError = null;
+
+	$scope.onPayoutClick = function () {
+		insuranceService.payForClaim($scope.policyAddress, $scope.payoutValue).then(function (result) {
+					if (result) {
+						$scope.confirmTransaction = result;
+					}
+				}).catch(function (e) {
+					$scope.confirmError = e;
+				});
+	};
+
+	$scope.$watch('policyAddress', function (policyAddress) {
+		if (!policyAddress) {
+			return;
+		}
+
+		insuranceService.getPolicy(policyAddress).then(function (policy) {
+			$scope.policy = policy;
+
+			policy.getPublicData({}, function (e, publicData) {
+				if (e) {
+					return;
+				}
+
+				$scope.$apply(function () {
+					$scope.insuredAmount = publicData[1].toString();
+
+					$scope.claim.claimNo = publicData[2].toString();
+					$scope.claim.description = publicData[3].toString();
+					$scope.claim.lossValue = publicData[4].toString();
+				});
+			});
+
+
+		});
+	})
+}
+
 mod.config(['$locationProvider', '$routeProvider', function ($locationProvider, $routeProvider) {
 	$locationProvider.html5Mode = false;
 
@@ -213,6 +293,10 @@ mod.config(['$locationProvider', '$routeProvider', function ($locationProvider, 
 	.when('/confirm', {
 		controller: 'ConfirmCtrl',
 		templateUrl: '/templates/confirm-loss.html'
+	})
+	.when('/payout', {
+		controller: 'PayoutCtrl',
+		templateUrl: '/templates/payout.html'
 	})
 	.when('/', {
 		templateUrl: '/templates/home.html'

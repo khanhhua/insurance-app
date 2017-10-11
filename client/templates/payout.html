@@ -1,0 +1,46 @@
+<h1>Payout</h1>
+<div class="row">
+  <div class="col-sm-12">
+    <form>
+      <div class="form-group">
+        <label class="control-label" for="policyAddress">Policy address</label>
+        <input class="form-control" type="text" name="policyAddress" id="policyAddress"
+               ng-model="policyAddress" ng-model-options="{updateOn: 'blur', debounce: 500}">
+      </div>
+
+      <div class="form-group">
+        <label for="insuredAmount">Insured amount</label>
+        <span class="form-control">{{insuredAmount}}</span>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label" for="description">Description of Loss</label>
+        <span class="form-control">{{claim.description}}</span>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label" for="lossValue">Loss Value</label>
+        <span class="form-control">{{claim.lossValue}}</span>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label" for="lossValue">Payout Value</label>
+        <input class="form-control" type="text" name="payoutValue" id="payoutValue"
+               ng-model="payoutValue">
+      </div>
+
+      <div class="form-group">
+        <button type="button" class="btn btn-warning center-block" ng-click="onPayoutClick()">
+          Payout!
+        </button>
+      </div>
+
+      <div class="alert alert-warning" ng-if="confirmTransaction">
+        <p>Claim has been paid out successfully. Transaction: `{{confirmTransaction}}`</p>
+      </div>
+      <div class="alert alert-warning" ng-if="confirmError">
+        <p>{{confirmError}}</p>
+      </div>
+    </form>
+  </div>
+</div>
